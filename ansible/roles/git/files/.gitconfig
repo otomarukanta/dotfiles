@@ -1,0 +1,19 @@
+[include]
+  path = ~/.gitconfig_local
+[alias]
+  st = status
+  co = checkout
+  br = branch
+  ci = commit
+  l = log --all --graph --pretty='format:%C(yellow)%h%C(cyan)%d %C(red)$%ar %C(reset)%s'
+[core]
+  editor = vim
+  excludesfiles = ~/.gitignore
+[color]
+  ui = true
+[pager]
+  log = diff-highlight | less -R
+  diff = diff-highlight | less -R
+  show = diff-highlight | less -R
+[ghq]
+    root = ~/src

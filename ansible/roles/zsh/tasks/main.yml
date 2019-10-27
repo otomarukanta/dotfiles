@@ -1,0 +1,31 @@
+- name: install zsh
+  apt:
+    name: zsh
+
+- name: get zsh path
+  shell: which zsh
+  register: zsh_path
+  changed_when: False
+
+- name: set default shell to zsh
+  user:
+    name: '{{ ansible_ssh_user }}'
+    shell: '{{ zsh_path.stdout }}'
+  become: yes
+
+- name: copy .zshrc
+  copy:
+    src: .zshrc 
+    dest: '{{ ansible_env.HOME }}/.zshrc'
+
+- name: unzip zsh-syntax-highlighting
+  unarchive:
+    src: https://github.com/zsh-users/zsh-syntax-highlighting/archive/master.tar.gz
+    dest: '{{ ansible_env.HOME }}/local'
+    remote_src: yes
+
+- name: unzip zplugin
+  unarchive:
+    src: https://github.com/zdharma/zplugin/archive/master.tar.gz
+    dest: '{{ ansible_env.HOME }}/local'
+    remote_src: yes

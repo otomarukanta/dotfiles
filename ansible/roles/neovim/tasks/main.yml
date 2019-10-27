@@ -1,0 +1,29 @@
+- name: mkdir {{ ansible_env.HOME }}/local
+  file:
+    path: '{{ ansible_env.HOME }}/local'
+    state: directory
+    mode: 0755
+
+- name: unzip neovim 0.3.8
+  unarchive:
+    src: https://github.com/neovim/neovim/releases/download/v0.3.8/nvim-linux64.tar.gz
+    dest: '{{ ansible_env.HOME }}/local'
+    remote_src: yes
+
+- name: mkdir neovim settings dirs
+  file:
+    path: '{{ item.path }}'
+    state: directory
+    mode: 0755
+  with_items:
+    - { path: '{{ ansible_env.HOME }}/.config/nvim' }
+    - { path: '{{ ansible_env.HOME }}/.config/dein' }
+
+- name: copy neovim setting files
+  copy:
+    src: '{{ item.src }}'
+    dest: '{{ item.dest }}'
+  with_items:
+    - { src: init.vim, dest: '{{ ansible_env.HOME }}/.config/nvim/init.vim' }
+    - { src: plugins.toml, dest: '{{ ansible_env.HOME }}/.config/dein/plugins.toml' }
+    - { src: plugins_lazy.toml, dest: '{{ ansible_env.HOME }}/.config/dein/plugins_lazy.toml' }
