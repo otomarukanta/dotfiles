@@ -112,3 +112,33 @@ eval "$(gh completion -s zsh)"
 plugins=(
   git
 )
+
+/usr/bin/keychain -q --nogui /home/kanta/.ssh/id_ed25519
+source ~/.keychain/$HOST-sh
+
+source ~/.env.keys
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+. "/home/kanta/.deno/env"
+
+# zellij https://github.com/zellij-org/zellij
+if [[ "$TERM_PROGRAM" == 'vscode' ]]; then
+  if [[ -z "$ZELLIJ" ]]; then
+    dir=$(git rev-parse --show-toplevel 2>/dev/null || printf '%s\n' "$PWD")
+    org="$(basename "$(dirname "$dir")")"
+    repo="$(basename "$dir")"
+
+    zellij attach --create $org-$repo
+    exit
+  fi
+else
+  if [[ -z "$VSCODE_RESOLVING_ENVIRONMENT" ]]; then
+    # export ZELLIJ_AUTO_ATTACH=true
+    export ZELLIJ_AUTO_EXIT=true
+    eval "$(zellij setup --generate-auto-start zsh)"
+  fi
+fi
+
+
+export PATH='/home/kanta/.duckdb/cli/latest':$PATH
