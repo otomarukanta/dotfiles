@@ -7,6 +7,12 @@ fi
 autoload -Uz compinit
 compinit
 
+# History configuration
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=1000
+SAVEHIST=10000
+setopt appendhistory hist_ignore_dups
+
 # GitHub CLI completion
 if command -v gh >/dev/null 2>&1; then
   eval "$(gh completion -s zsh)"
