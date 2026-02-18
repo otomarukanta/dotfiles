@@ -86,11 +86,12 @@ fi
 autoload -Uz vcs_info
 autoload -Uz add-zsh-hook
 zstyle ':vcs_info:*' enable git
-zstyle ':vcs_info:git:*' actionformats '(%b|%a)'
+zstyle ':vcs_info:*' use-prompt-escapes true
+zstyle ':vcs_info:git:*' actionformats '(%F{cyan}%b%f|%F{yellow}%a%f%F{red}%u%f%F{green}%c%f)'
 zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:git:*' unstagedstr '*'
 zstyle ':vcs_info:git:*' stagedstr '+'
-zstyle ':vcs_info:git:*' formats '(%b%u%c)'
+zstyle ':vcs_info:git:*' formats '(%F{cyan}%b%f%F{red}%u%f%F{green}%c%f)'
 
 add-zsh-hook precmd vcs_info
 setopt prompt_subst
