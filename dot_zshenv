@@ -1,0 +1,15 @@
+
+export PATH="$PATH:/home/kanta/.foundry/bin"
+. "$HOME/.cargo/env"
+
+# uv
+export PATH="/home/kanta/.local/bin:$PATH"
+
+# XDG
+export XDG_CONFIG_HOME=$HOME/.config
+export XDG_DATA_HOME=$XDG_CONFIG_HOME/local/share
+export XDG_CACHE_HOME=$XDG_CONFIG_HOME/cache
+
+# editor
+export EDITOR="vim"
+export VISUAL="vim"
