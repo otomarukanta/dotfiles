@@ -9,7 +9,7 @@ compinit
 
 # History configuration
 HISTFILE="$HOME/.zsh_history"
-HISTSIZE=1000
+HISTSIZE=10000
 SAVEHIST=10000
 setopt appendhistory hist_ignore_dups
 
@@ -77,11 +77,6 @@ ANTHROPIC_DEFAULT_HAIKU_MODEL="glm-4.5-air" \
 ANTHROPIC_DEFAULT_SONNET_MODEL="glm-4.7" \
 ANTHROPIC_DEFAULT_OPUS_MODEL="glm-5" claude'
 
-# Entire CLI shell completion
-if command -v entire >/dev/null 2>&1; then
-  source <(entire completion zsh)
-fi
-
 # Prompt with git branch/state
 autoload -Uz vcs_info
 autoload -Uz add-zsh-hook
@@ -97,33 +92,38 @@ add-zsh-hook precmd vcs_info
 setopt prompt_subst
 PROMPT='%n@%m:%~ ${vcs_info_msg_0_}%# '
 
-# Vi mode
-bindkey -v
-export KEYTIMEOUT=1
+# ghq
+function ghq-fzf() {
+  local src=$(ghq list | fzf --preview "bat --color=always --style=header,grid --line-range :80 $(ghq root)/{}/README.*")
+  if [ -n "$src" ]; then
+    BUFFER="cd $(ghq root)/$src"
+    zle accept-line
+  fi
+  zle -R -c
+}
+zle -N ghq-fzf
+bindkey '^g' ghq-fzf
 
-cursor_mode() {
-    # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
-    cursor_block='\e[2 q'
-    cursor_beam='\e[6 q'
+fzf-history-widget() {
+  local selected
 
-    function zle-keymap-select {
-        if [[ ${KEYMAP} == vicmd ]] ||
-            [[ $1 = 'block' ]]; then
-            echo -ne $cursor_block
-        elif [[ ${KEYMAP} == main ]] ||
-            [[ ${KEYMAP} == viins ]] ||
-            [[ ${KEYMAP} = '' ]] ||
-            [[ $1 = 'beam' ]]; then
-            echo -ne $cursor_beam
-        fi
-    }
+  # fc -rl 1
+  #   - 履歴を新しい順（reverse）に取得します
+  #   - 行頭に履歴番号が付きます
+  selected=$(fc -rl 1 \
+    | sed 's/^[[:space:]]*[0-9]\+[[:space:]]*//' \
+    | fzf --tac +s) || return
+    # 履歴番号を削除します
+    # fzf でインタラクティブに検索します
+    # --tac : 表示を逆順（最近の履歴を下側に）
+    # +s    : 入力順ソートを維持します
 
-    zle-line-init() {
-        echo -ne $cursor_beam
-    }
-
-    zle -N zle-keymap-select
-    zle -N zle-line-init
+  # 選択したコマンドをカーソル位置に挿入します
+  LBUFFER+="$selected"
 }
 
-cursor_mode
+# zle widget として登録します
+zle -N fzf-history-widget
+
+# Ctrl-r に割り当てます
+bindkey '^R' fzf-history-widget
