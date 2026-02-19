@@ -96,3 +96,34 @@ zstyle ':vcs_info:git:*' formats '(%F{cyan}%b%f%F{red}%u%f%F{green}%c%f)'
 add-zsh-hook precmd vcs_info
 setopt prompt_subst
 PROMPT='%n@%m:%~ ${vcs_info_msg_0_}%# '
+
+# Vi mode
+bindkey -v
+export KEYTIMEOUT=1
+
+cursor_mode() {
+    # See https://ttssh2.osdn.jp/manual/4/en/usage/tips/vim.html for cursor shapes
+    cursor_block='\e[2 q'
+    cursor_beam='\e[6 q'
+
+    function zle-keymap-select {
+        if [[ ${KEYMAP} == vicmd ]] ||
+            [[ $1 = 'block' ]]; then
+            echo -ne $cursor_block
+        elif [[ ${KEYMAP} == main ]] ||
+            [[ ${KEYMAP} == viins ]] ||
+            [[ ${KEYMAP} = '' ]] ||
+            [[ $1 = 'beam' ]]; then
+            echo -ne $cursor_beam
+        fi
+    }
+
+    zle-line-init() {
+        echo -ne $cursor_beam
+    }
+
+    zle -N zle-keymap-select
+    zle -N zle-line-init
+}
+
+cursor_mode
