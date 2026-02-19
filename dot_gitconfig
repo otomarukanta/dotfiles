@@ -1,0 +1,26 @@
+[credential "https://github.com"]
+	helper = 
+	helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
+[user]
+	email = kanta208@gmail.com
+	name = otomarukanta
+[pager]
+	log = cat
+	branch = cat
+	config = cat
+	diff = cat
+[core]
+	editor = vim
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	dc = diff --cached
+	l = log -10 --graph --all --pretty=format:'%Cblue%h%Creset %C(yellow)%an%Creset [%ar] %C(auto)%d%Creset %s'
+
+[coderabbit]
+	machineId = cli/ce373054ae714a76809c6b2717d1ea3e
