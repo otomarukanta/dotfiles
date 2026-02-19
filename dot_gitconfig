@@ -24,3 +24,6 @@
 
 [coderabbit]
 	machineId = cli/ce373054ae714a76809c6b2717d1ea3e
+
+[ghq]
+ root = /home/kanta/src
