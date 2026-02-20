@@ -105,21 +105,9 @@ zle -N ghq-fzf
 bindkey '^g' ghq-fzf
 
 fzf-history-widget() {
-  local selected
-
-  # fc -rl 1
-  #   - 履歴を新しい順（reverse）に取得します
-  #   - 行頭に履歴番号が付きます
-  selected=$(fc -rl 1 \
-    | sed 's/^[[:space:]]*[0-9]\+[[:space:]]*//' \
-    | fzf --tac +s) || return
-    # 履歴番号を削除します
-    # fzf でインタラクティブに検索します
-    # --tac : 表示を逆順（最近の履歴を下側に）
-    # +s    : 入力順ソートを維持します
-
-  # 選択したコマンドをカーソル位置に挿入します
-  LBUFFER+="$selected"
+  BUFFER=$(history -n -r 1 | fzf --query "$LBUFFER" --reverse)
+  CURSOR=$#BUFFER
+  zle reset-prompt
 }
 
 # zle widget として登録します
@@ -127,3 +115,5 @@ zle -N fzf-history-widget
 
 # Ctrl-r に割り当てます
 bindkey '^R' fzf-history-widget
+
+export PATH="/home/kanta/.lmstudio/bin:$PATH"
