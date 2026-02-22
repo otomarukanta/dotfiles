@@ -1,9 +1,9 @@
 [credential "https://github.com"]
 	helper = 
-	helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
+	helper = !f() { gh_bin="$(command -v gh)"; [ -n "$gh_bin" ] || exit 1; "$gh_bin" auth git-credential "$@"; }; f
 [credential "https://gist.github.com"]
 	helper = 
-	helper = !/home/linuxbrew/.linuxbrew/bin/gh auth git-credential
+	helper = !f() { gh_bin="$(command -v gh)"; [ -n "$gh_bin" ] || exit 1; "$gh_bin" auth git-credential "$@"; }; f
 [user]
 	email = kanta208@gmail.com
 	name = otomarukanta
